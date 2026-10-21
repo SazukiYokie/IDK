@@ -31,21 +31,38 @@
         :root {
             --primary: #4f46e5;
             --primary-light: #818cf8;
-            --secondary: #0ea5e9;
+            --primary-dark: #3730a3;
+            --secondary: #06b6d4;
+            --neon-cyan: #00f2fe;
+            --neon-blue: #4facfe;
+            --neon-purple: #a855f7;
             --accent: #f59e0b;
             --success: #10b981;
             --danger: #ef4444;
-            --bg-color: #f3f4f6;
-            --surface: #ffffff;
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --border: #e5e7eb;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --radius-md: 0.5rem;
-            --radius-lg: 1rem;
-            --radius-xl: 1.5rem;
+            --bg-color: #eef2ff;
+            --surface: rgba(255, 255, 255, 0.90);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: rgba(99, 102, 241, 0.2);
+            --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.05);
+            --shadow-md: 0 10px 30px rgba(79, 70, 229, 0.10);
+            --shadow-lg: 0 25px 60px rgba(6, 182, 212, 0.18);
+            --radius-md: 0.85rem;
+            --radius-lg: 1.2rem;
+            --radius-xl: 1.6rem;
+        }
+
+        body.dark-mode {
+            --bg-color: #050814;
+            --surface: rgba(15, 23, 42, 0.85);
+            --card-bg: rgba(30, 41, 59, 0.90);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(56, 189, 248, 0.25);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 10px 30px rgba(0, 242, 254, 0.12);
+            --shadow-lg: 0 25px 65px rgba(0, 242, 254, 0.22);
         }
 
         * {
@@ -58,135 +75,261 @@
             font-family: 'Battambang', 'Poppins', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            line-height: 1.6;
+            line-height: 1.7;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 16px;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Interactive Math Particle & Grid Canvas Background */
+        #mathBgCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
         }
 
         .app-container {
             width: 100%;
-            max-width: 1200px; /* Landscape width constraint */
-            aspect-ratio: 16 / 9; /* Landscape ratio */
+            max-width: 1280px;
+            aspect-ratio: 16 / 9;
             background-color: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
             border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
+            z-index: 2;
         }
 
-        /* Fallback for aspect-ratio not supported / mobile */
+        body.dark-mode .app-container {
+            box-shadow: 0 0 50px rgba(6, 182, 212, 0.15), 0 0 0 1px rgba(56, 189, 248, 0.2) inset;
+        }
+
         @media (max-width: 1024px) {
             .app-container {
                 aspect-ratio: auto;
-                min-height: 90vh;
+                min-height: 92vh;
             }
         }
 
+        /* Header & Futuristic Navigation */
         header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(125deg, #0f172a 0%, #1e1b4b 45%, #0369a1 100%);
             color: white;
-            padding: 1rem 2rem;
+            padding: 0.9rem 1.75rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: var(--shadow-md);
-            z-index: 10;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 20;
+            gap: 1rem;
+            flex-wrap: wrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), var(--neon-cyan), transparent);
+            background-size: 200% 100%;
+            animation: laserLine 4s linear infinite;
+        }
+
+        @keyframes laserLine {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.95rem;
+        }
+
+        .header-badge-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: rgba(0, 242, 254, 0.15);
+            border: 1px solid rgba(0, 242, 254, 0.45);
+            box-shadow: 0 0 18px rgba(0, 242, 254, 0.35);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.45rem;
+            color: var(--neon-cyan);
+            animation: floatPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes floatPulse {
+            0%, 100% { transform: translateY(0px); box-shadow: 0 0 15px rgba(0, 242, 254, 0.35); }
+            50% { transform: translateY(-3px); box-shadow: 0 0 25px rgba(0, 242, 254, 0.65); }
         }
 
         .header-title h1 {
             font-family: 'Moul', cursive;
-            font-size: 1.5rem;
-            margin-bottom: 0.2rem;
+            font-size: 1.35rem;
+            margin-bottom: 0.1rem;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 10px rgba(0, 242, 254, 0.3);
         }
         
         .header-title p {
-            font-size: 0.9rem;
-            opacity: 0.9;
+            font-size: 0.85rem;
+            color: #bae6fd;
         }
 
         nav {
             display: flex;
             gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .nav-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-md);
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
             font-family: inherit;
             font-weight: 600;
+            font-size: 0.92rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.45rem;
+            backdrop-filter: blur(8px);
         }
 
         .nav-btn:hover, .nav-btn.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: var(--shadow-sm);
+            background: linear-gradient(135deg, var(--neon-cyan), #3b82f6);
+            color: #0f172a;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+            font-weight: 700;
         }
 
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(0, 242, 254, 0.35);
+            color: var(--neon-cyan);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .icon-btn:hover {
+            background: var(--neon-cyan);
+            color: #0f172a;
+            box-shadow: 0 0 18px var(--neon-cyan);
+            transform: rotate(20deg) scale(1.08);
+        }
+
+        /* Main Scrollable Area */
         .main-content {
             flex: 1;
             overflow-y: auto;
-            padding: 2rem;
+            padding: 1.75rem 2.2rem;
             position: relative;
+            scroll-behavior: smooth;
         }
 
         .section {
             display: none;
-            animation: fadeIn 0.4s ease-in-out;
+            animation: sectionEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .section.active {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes sectionEnter {
+            from { opacity: 0; transform: translateY(14px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .title-moul {
             font-family: 'Moul', cursive;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.35rem;
             text-align: center;
             font-size: 1.8rem;
+            filter: drop-shadow(0 2px 10px rgba(79, 70, 229, 0.15));
         }
 
+        body.dark-mode .title-moul {
+            background: linear-gradient(135deg, var(--neon-cyan), #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* High-Tech Info & Formula Cards */
         .info-box {
-            background-color: #eff6ff;
+            background-color: var(--card-bg);
             border-left: 5px solid var(--secondary);
-            padding: 1.5rem;
-            border-radius: 0 var(--radius-md) var(--radius-md) 0;
-            margin-bottom: 1.5rem;
+            padding: 1.35rem 1.5rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.35rem;
+            box-shadow: var(--shadow-sm);
+            border-top: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-box:hover {
+            box-shadow: var(--shadow-md);
         }
 
         .formula-box {
-            background: linear-gradient(to right, #f8fafc, #eff6ff);
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.07), rgba(6, 182, 212, 0.10));
             border: 2px dashed var(--primary-light);
-            padding: 1.5rem;
+            padding: 1.15rem 1rem;
             border-radius: var(--radius-lg);
             text-align: center;
-            margin: 1.5rem 0;
-            font-size: 1.2rem;
+            margin: 1rem 0;
+            font-size: 1.15rem;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(6, 182, 212, 0.08);
+            overflow-x: auto;
         }
 
         .highlight {
-            background-color: #fef08a;
-            padding: 0 0.2rem;
-            border-radius: 3px;
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            color: #0f172a;
+            padding: 0.08rem 0.5rem;
+            border-radius: 6px;
             font-weight: bold;
+            box-shadow: 0 2px 6px rgba(250, 204, 21, 0.3);
         }
 
         .grid-2 {
@@ -195,58 +338,383 @@
             gap: 1.5rem;
         }
 
-        @media (max-width: 768px) {
-            .grid-2 { grid-template-columns: 1fr; }
+        /* ==================== CYBER NEON QUANTUM FRAME FOR VRJ.jpg ==================== */
+        .profile-frame-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            position: relative;
         }
 
+        .neon-quantum-wrapper {
+            position: relative;
+            width: 270px;
+            height: 270px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Outer Pulsing Holographic Radar Ring */
+        .quantum-ring-outer {
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            border: 2px dashed rgba(6, 182, 212, 0.55);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.25), inset 0 0 20px rgba(0, 242, 254, 0.15);
+            animation: spinSlow 18s linear infinite;
+        }
+
+        /* Counter-Rotating Neon Laser Ring */
+        .quantum-ring-middle {
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: var(--neon-cyan);
+            border-bottom-color: var(--neon-purple);
+            filter: drop-shadow(0 0 12px var(--neon-cyan)) drop-shadow(0 0 16px var(--neon-purple));
+            animation: spinReverse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Inner High-Energy Plasma Core Ring */
+        .profile-frame {
+            position: relative;
+            width: 236px;
+            height: 236px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 0 35px rgba(0, 242, 254, 0.45), 0 0 60px rgba(79, 70, 229, 0.35);
+            background: #0f172a;
+        }
+        
+        .profile-frame::before {
+            content: "";
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                var(--neon-cyan) 60deg,
+                #ffffff 90deg,
+                var(--primary-light) 140deg,
+                transparent 180deg,
+                var(--neon-purple) 250deg,
+                #ffffff 280deg,
+                var(--neon-cyan) 330deg,
+                transparent 360deg
+            );
+            animation: spinFrame 3.2s linear infinite;
+        }
+        
+        .profile-frame::after {
+            content: "";
+            position: absolute;
+            inset: 5px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            box-shadow: inset 0 0 20px rgba(0, 242, 254, 0.4);
+        }
+        
+        .profile-img {
+            position: relative;
+            z-index: 10;
+            width: calc(100% - 14px);
+            height: calc(100% - 14px);
+            object-fit: cover;
+            border-radius: 50%;
+            background-color: #1e293b;
+            transition: transform 0.4s ease;
+        }
+
+        .neon-quantum-wrapper:hover .profile-img {
+            transform: scale(1.04);
+        }
+
+        /* Floating Math Orbit Badges around VRJ.jpg */
+        .math-orbit-node {
+            position: absolute;
+            z-index: 16;
+            background: rgba(15, 23, 42, 0.9);
+            color: var(--neon-cyan);
+            border: 1.5px solid var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            backdrop-filter: blur(6px);
+            animation: floatNode 3.5s ease-in-out infinite;
+        }
+
+        .math-orbit-node.node-1 { top: 4px; right: 2px; animation-delay: 0s; }
+        .math-orbit-node.node-2 { bottom: 26px; left: -10px; color: #c084fc; border-color: #c084fc; box-shadow: 0 0 15px rgba(192, 132, 252, 0.6); animation-delay: 1.2s; }
+        .math-orbit-node.node-3 { top: 38%; left: -22px; color: #38bdf8; border-color: #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.6); animation-delay: 2.2s; }
+
+        @keyframes floatNode {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-6px) scale(1.06); }
+        }
+
+        .profile-caption-badge {
+            margin-top: -8px;
+            z-index: 20;
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+            color: var(--neon-cyan);
+            padding: 0.4rem 1.35rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.45);
+            border: 1.5px solid var(--neon-cyan);
+            letter-spacing: 0.5px;
+        }
+        
+        @keyframes spinFrame {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes spinSlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes spinReverse {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Discovery Table */
+        .discovery-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .discovery-table th {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            padding: 0.85rem;
+            text-align: center;
+            font-size: 1.05rem;
+        }
+
+        .discovery-table td {
+            padding: 0.85rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.05rem;
+            transition: all 0.35s ease;
+        }
+
+        .discovery-table tr.active-row td {
+            background: rgba(16, 185, 129, 0.16);
+            font-weight: bold;
+            box-shadow: inset 4px 0 0 #059669;
+        }
+
+        .conclusion-box {
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            color: #1e293b;
+            border: 2px solid #f59e0b;
+            border-radius: var(--radius-md);
+            padding: 1.25rem 1rem 0.9rem 1rem;
+            margin-top: 1.35rem;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .conclusion-badge {
+            position: absolute;
+            top: -14px;
+            left: 20px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 0.2rem 0.95rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-family: 'Moul', cursive;
+            font-size: 0.82rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* GeoGebra Interactive Box */
+        .geogebra-card {
+            background: #ffffff;
+            color: #1e293b;
+            border: 2px solid #c4b5fd;
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin: 0.85rem 0;
+            box-shadow: inset 0 2px 15px rgba(139, 92, 246, 0.1);
+        }
+
+        .geogebra-svg {
+            width: 100%;
+            max-width: 460px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .geo-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .geo-btn {
+            background: #f3e8ff;
+            color: #6d28d9;
+            border: 1px solid #c4b5fd;
+            padding: 0.38rem 0.9rem;
+            border-radius: 999px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .geo-btn:hover, .geo-btn.active {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+        }
+
+        .geo-status-pill {
+            background: #ede9fe;
+            color: #5b21b6;
+            padding: 0.35rem 0.95rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.86rem;
+            min-width: 145px;
+            text-align: center;
+            border: 1px solid #ddd6fe;
+        }
+
+        .geo-vector {
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .geo-vector.dimmed {
+            opacity: 0.12;
+        }
+
+        .geo-vector.highlighted circle {
+            r: 8.5;
+            filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.9));
+        }
+
+        /* Step-by-Step Mini Controller on Cards */
+        .mini-stepper-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, rgba(79, 70, 229, 0.10), rgba(6, 182, 212, 0.10));
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            padding: 0.55rem 1rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 0.95rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .mini-step-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            font-family: inherit;
+            font-size: 0.84rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 3px 10px rgba(79, 70, 229, 0.25);
+        }
+
+        .mini-step-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(6, 182, 212, 0.45);
+        }
+
+        .mini-step-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Step Cards & Flashcards */
         .step-container {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.1rem;
         }
 
         .step-card {
-            background: var(--surface);
+            background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 1.5rem;
+            padding: 1.35rem;
             display: flex;
-            gap: 1.5rem;
+            gap: 1.25rem;
             align-items: flex-start;
             box-shadow: var(--shadow-sm);
-            transition: transform 0.2s;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .step-card:hover {
-            transform: translateX(5px);
-            border-color: var(--secondary);
+        .step-card.step-focused {
+            border: 2px solid var(--secondary);
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.22);
+            transform: translateX(6px);
         }
 
         .step-number {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 1.2rem;
             font-weight: bold;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
         }
 
+        /* Flashcards */
         .flashcard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            gap: 1.75rem;
             perspective: 1000px;
         }
 
         .flashcard {
             background-color: transparent;
             width: 100%;
-            height: 250px;
+            height: 245px;
             perspective: 1000px;
             cursor: pointer;
         }
@@ -256,10 +724,14 @@
             width: 100%;
             height: 100%;
             text-align: center;
-            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
             transform-style: preserve-3d;
             box-shadow: var(--shadow-md);
             border-radius: var(--radius-lg);
+        }
+
+        .flashcard:hover .flashcard-inner {
+            box-shadow: 0 15px 35px rgba(6, 182, 212, 0.25);
         }
 
         .flashcard.is-flipped .flashcard-inner {
@@ -276,293 +748,267 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: var(--radius-lg);
-            background: var(--surface);
+            background: var(--card-bg);
             border: 2px solid var(--border);
-        }
-
-        .flashcard-front {
-            background: linear-gradient(135deg, #ffffff, #f3f4f6);
         }
         
         .flashcard-front h3 {
             color: var(--primary);
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            margin-bottom: 0.6rem;
         }
 
         .flashcard-front .hint {
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
             margin-top: auto;
         }
 
         .flashcard-back {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #1e1b4b, var(--primary), var(--secondary));
             color: white;
             transform: rotateY(180deg);
-            border: none;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.4);
             font-size: 1.2rem;
         }
 
+        /* Exercises */
         .exercise-card {
-            background: var(--surface);
+            background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1.35rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .exercise-card:hover {
+            border-color: var(--secondary);
+            box-shadow: var(--shadow-md);
         }
 
         .exercise-header {
             font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
+            font-size: 1.15rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .btn-toggle {
-            background-color: var(--bg-color);
-            border: 1px solid var(--border);
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(6, 182, 212, 0.15));
+            border: 1px solid var(--primary-light);
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
             cursor: pointer;
             font-family: inherit;
-            transition: all 0.2s;
+            transition: all 0.25s;
             color: var(--primary);
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 0.88rem;
+        }
+
+        body.dark-mode .btn-toggle {
+            color: var(--neon-cyan);
+            border-color: var(--neon-cyan);
         }
 
         .btn-toggle:hover {
-            background-color: var(--primary-light);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.35);
         }
 
         .solution-box {
             display: none;
             margin-top: 1rem;
-            padding-top: 1rem;
+            padding: 1rem 1.25rem;
             border-top: 1px dashed var(--border);
-            background-color: #f8fafc;
-            padding: 1rem;
+            background-color: rgba(79, 70, 229, 0.04);
             border-radius: var(--radius-md);
-            animation: fadeIn 0.3s;
+            animation: sectionEnter 0.35s ease;
         }
 
-        /* Footer Credits */
+        .sol-step-item {
+            padding: 0.65rem 0.9rem;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--primary);
+            background: var(--card-bg);
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+            animation: stepReveal 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes stepReveal {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Footer */
         footer {
-            background: var(--text-main);
+            background: #090d16;
             color: white;
-            text-align: center;
-            padding: 1rem;
-            font-size: 0.9rem;
+            padding: 0.8rem 1.75rem;
+            font-size: 0.85rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            border-top: 1px solid rgba(0, 242, 254, 0.25);
         }
-        .credits-authors { color: var(--secondary); font-weight: bold; }
-        .credits-teacher { color: var(--accent); }
+        .credits-authors { color: var(--neon-cyan); font-weight: bold; }
+        .credits-teacher { color: #fbbf24; font-weight: bold; }
 
-        /* --- បន្ថែមកូដ CSS ថ្មីសម្រាប់ជួសជុលបញ្ហានៅលើទូរស័ព្ទ និងរចនាទម្រង់រូបភាពថ្មី --- */
         @media (max-width: 768px) {
-            body {
-                padding: 0;
-            }
+            body { padding: 0; }
             .app-container {
                 border-radius: 0;
                 min-height: 100vh;
                 height: auto;
-                display: block; /* ផ្តាច់ flex ដើម្បីការពារការកាត់អត្ថបទ (cut off) នៅលើទូរស័ព្ទ */
+                display: block;
             }
             header {
                 flex-direction: column;
-                gap: 1rem;
-                padding: 1.5rem 1rem;
                 text-align: center;
+                padding: 1.1rem 1rem;
+            }
+            .header-title {
+                flex-direction: column;
             }
             nav {
-                flex-wrap: wrap;
                 justify-content: center;
             }
             .main-content {
-                overflow-y: visible; /* អនុញ្ញាតឲ្យអូសចុះក្រោមបានពេញលេញ */
-                padding: 1rem;
+                overflow-y: visible;
+                padding: 1.1rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
             }
             footer {
                 flex-direction: column;
-                gap: 0.5rem;
+                text-align: center;
             }
         }
-
-        /* រចនារូបភាព VRJ.JPG ជារាងរង្វង់ និងមាន Effect ស៊ុមពណ៌វិល (Animated Conic Gradient) */
-        .profile-frame-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-        }
-        
-        .profile-frame {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-        
-        /* Effect ពណ៌ដែលវិលជុំវិញ */
-        .profile-frame::before {
-            content: "";
-            position: absolute;
-            width: 150%;
-            height: 150%;
-            background: conic-gradient(
-                from 0deg, 
-                var(--primary), 
-                #ff007a, 
-                var(--accent), 
-                var(--success), 
-                var(--secondary),
-                var(--primary)
-            );
-            animation: spinFrame 4s linear infinite;
-        }
-        
-        /* ស៊ុមខាងក្នុងសម្រាប់កាត់ពណ៌វិលឲ្យចេញជាបន្ទាត់ */
-        .profile-frame::after {
-            content: "";
-            position: absolute;
-            inset: 6px; /* កម្រាស់នៃស៊ុមពណ៌ */
-            background: var(--surface);
-            border-radius: 50%;
-        }
-        
-        .profile-img {
-            position: relative;
-            z-index: 10;
-            width: calc(100% - 12px);
-            height: calc(100% - 12px);
-            object-fit: cover;
-            border-radius: 50%;
-            background-color: #f3f4f6;
-        }
-        
-        @keyframes spinFrame {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* --- រចនាបន្ថែមសម្រាប់តារាងរកឃើញទម្រង់ z^n --- */
-        .discovery-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1.5rem 0;
-            background: var(--surface);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-        }
-        .discovery-table th {
-            background: #059669; /* ពណ៌បៃតងចាស់ដូចក្នុងស្លាយ */
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-        .discovery-table td {
-            padding: 1rem;
-            text-align: center;
-            border-bottom: 1px solid var(--border);
-            font-size: 1.1rem;
-        }
-        .discovery-table tr:last-child td { border-bottom: none; }
-        .discovery-table tr:hover { background-color: #f8fafc; }
-        
-        .conclusion-box {
-            background: #fef3c7; 
-            border: 2px solid #f59e0b;
-            border-radius: var(--radius-md);
-            padding: 1.5rem 1rem 1rem 1rem;
-            margin-top: 2rem;
-            position: relative;
-            box-shadow: var(--shadow-sm);
-        }
-        .conclusion-badge {
-            position: absolute;
-            top: -16px;
-            left: 20px;
-            background: #f59e0b;
-            color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            font-weight: bold;
-            font-family: 'Moul', cursive;
-            font-size: 0.9rem;
-            box-shadow: var(--shadow-sm);
-        }
-
     </style>
 </head>
 <body>
 
+    <!-- Interactive Math Constellation & Formula Canvas Background -->
+    <canvas id="mathBgCanvas"></canvas>
+
     <div class="app-container">
         <header>
             <div class="header-title">
-                <h1>ចំនួនកុំផ្លិចទម្រង់ត្រីកោណមាត្រ</h1>
-                <p>ស្វ័យគុណទី $n$ និងរូបមន្តដឺម័រ (De Moivre's Theorem)</p>
+                <div class="header-badge-icon">
+                    <i class="fas fa-infinity"></i>
+                </div>
+                <div>
+                    <h1>ចំនួនកុំផ្លិចទម្រង់ត្រីកោណមាត្រ</h1>
+                    <p>ស្វ័យគុណទី $n$ និងរូបមន្តដឺម័រ (De Moivre's Theorem)</p>
+                </div>
             </div>
             <nav>
-                <button class="nav-btn active" onclick="switchTab('home')"><i class="fas fa-home"></i> ដើម</button>
-                <button class="nav-btn" onclick="switchTab('theory')"><i class="fas fa-book"></i> ទ្រឹស្តី</button>
-                <button class="nav-btn" onclick="switchTab('steps')"><i class="fas fa-list-ol"></i> ជំហានគណនា</button>
-                <button class="nav-btn" onclick="switchTab('flashcards')"><i class="fas fa-clone"></i> កាតរំលឹក</button>
-                <button class="nav-btn" onclick="switchTab('practice')"><i class="fas fa-pencil-alt"></i> អនុវត្ត</button>
+                <button class="nav-btn active" onclick="switchTab('home', this)"><i class="fas fa-home"></i> ដើម</button>
+                <button class="nav-btn" onclick="switchTab('theory', this)"><i class="fas fa-book"></i> ទ្រឹស្តី</button>
+                <button class="nav-btn" onclick="switchTab('steps', this)"><i class="fas fa-list-ol"></i> ជំហានគណនា</button>
+                <button class="nav-btn" onclick="switchTab('flashcards', this)"><i class="fas fa-clone"></i> កាតរំលឹក</button>
+                <button class="nav-btn" onclick="switchTab('practice', this)"><i class="fas fa-pencil-alt"></i> អនុវត្ត</button>
+                <button class="icon-btn" onclick="toggleDarkMode()" title="ប្តូរពណ៌ផ្ទៃ (Dark/Light Mode)">
+                    <i id="themeIcon" class="fas fa-moon"></i>
+                </button>
             </nav>
         </header>
 
         <div class="main-content">
             
+            <!-- ==================== ១. ទំព័រដើម (HOME) ==================== -->
             <section id="home" class="section active">
-                <div class="grid-2">
+                <div class="grid-2" style="align-items: center;">
                     <div>
-                        <h2 class="title-moul" style="text-align: left; font-size: 2.5rem; line-height: 1.4;">ស្វាគមន៍មកកាន់<br>មេរៀនចំនួនកុំផ្លិច</h2>
-                        <div class="info-box">
-                            <h3><i class="fas fa-bullseye text-primary"></i> វត្ថុបំណងមេរៀន៖</h3>
-                            <ul style="margin-left: 1.5rem; margin-top: 0.5rem; line-height: 1.8;">
-                                <li>ពន្យល់ និងកំណត់ស្វ័យគុណទី $n$ នៃចំនួនកុំផ្លិចក្នុងទម្រង់ត្រីកោណមាត្រ។</li>
-                                <li>ប្រើប្រាស់ <span class="highlight">រូបមន្តដឺម័រ (De Moivre)</span> បានត្រឹមត្រូវ។</li>
-                                <li>គណនាស្វ័យគុណ និងបម្លែងលទ្ធផលទៅទម្រង់ $a+bi$ បានស្ទាត់ជំនាញ។</li>
+                        <div style="display: inline-flex; align-items: center; gap: 0.45rem; background: linear-gradient(90deg, rgba(79,70,229,0.15), rgba(6,182,212,0.15)); border: 1px solid rgba(6,182,212,0.35); color: var(--primary); font-weight: 700; padding: 0.3rem 0.95rem; border-radius: 999px; font-size: 0.85rem; margin-bottom: 0.65rem;">
+                            <i class="fas fa-atom fa-spin" style="color: var(--secondary);"></i> គណិតវិទ្យាថ្នាក់ទី១២
+                        </div>
+                        <h2 class="title-moul" style="text-align: left; font-size: 2.2rem; line-height: 1.4; margin-bottom: 1rem;">គេហទំព័រស្វ័យសិក្សា</h2>
+                        
+                        <div class="info-box" style="margin-bottom: 1rem;">
+                            <h3 style="color: var(--primary); margin-bottom: 0.45rem;"><i class="fas fa-bullseye"></i> វត្ថុបំណងមេរៀន៖</h3>
+                            <ul style="margin-left: 1.35rem; line-height: 1.8;">
+                                <li><strong>វិជ្ជាសម្បទា៖</strong> ពន្យល់ និងកំណត់ស្វ័យគុណទី $n$ នៃចំនួនកុំផ្លិចក្នុងទម្រង់ត្រីកោណមាត្រ ដោយប្រើ <span class="highlight">រូបមន្តដឺម័រ (De Moivre)</span> បានត្រឹមត្រូវ។</li>
+                                <li><strong>បំណិនសម្បទា៖</strong> គណនាស្វ័យគុណ និងបម្លែងលទ្ធផលទៅទម្រង់ $a+bi$ បានស្ទាត់ជំនាញ។</li>
+                                <li><strong>ចរិយាសម្បទា៖</strong> បណ្តុះស្មារតីសហការតាមរយៈការពិភាក្សាក្រុម (Think-Pair-Share) និងការប្រើបច្ចេកវិទ្យា (GeoGebra)។</li>
                             </ul>
                         </div>
-                        <p style="color: var(--text-muted);">សូមប្រើប្រាស់ម៉ឺនុយខាងលើដើម្បីចាប់ផ្តើមការសិក្សា លំហាត់គំរូ និងការអនុវត្តជាក់ស្តែង។</p>
                     </div>
+
+                    <!-- Cyber Neon Quantum Reactor Frame for VRJ.jpg -->
                     <div class="profile-frame-container">
-                        <div class="profile-frame">
-                            <img src="VRJ.JPG" alt="VRJ Profile" class="profile-img" onerror="this.src='https://placehold.co/400x400/4f46e5/ffffff?text=VRJ'">
+                        <div class="neon-quantum-wrapper">
+                            <div class="quantum-ring-outer"></div>
+                            <div class="quantum-ring-middle"></div>
+                            <span class="math-orbit-node node-1">$z^n = r^n\text{cis}(n\theta)$</span>
+                            <span class="math-orbit-node node-2">$i^2 = -1$</span>
+                            <span class="math-orbit-node node-3">$\theta \to n\theta$</span>
+                            <div class="profile-frame">
+                                <img src="VRJ.jpg" alt="VRJ Profile" class="profile-img" onerror="this.src='https://placehold.co/400x400/0f172a/00f2fe?text=12NGS-B'">
+                            </div>
                         </div>
+                        <div class="profile-caption-badge">
+                            <i class="fas fa-bolt"></i> ក្រុមបទបង្ហាញ 12NGS-B
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ដំណាក់កាលទី២៖ រំលឹកមេរៀនចាស់ (Default ចាប់ផ្តើមពីជំហានទី 1) -->
+                <div class="info-box" style="border-left-color: var(--accent); margin-top: 0.5rem;">
+                    <div class="mini-stepper-bar">
+                        <strong style="color: var(--primary);"><i class="fas fa-history"></i> ដំណាក់កាលទី២ ៖ រំលឹកមេរៀនចាស់ (៥ នាទី)</strong>
+                        <div style="display: flex; gap: 0.45rem; align-items: center;">
+                            <button class="mini-step-btn" id="revPrevBtn" onclick="stepReview(-1)">&lt; មុន</button>
+                            <span id="reviewStepLabel" style="font-size: 0.85rem; font-weight: bold; min-width: 90px; text-align: center;">ជំហាន 1 / 3</span>
+                            <button class="mini-step-btn" id="revNextBtn" onclick="stepReview(1)">បន្ទាប់ &gt;</button>
+                        </div>
+                    </div>
+                    <div id="reviewStep1" class="sol-step-item">
+                        <strong>១. សំណួររំលឹក៖</strong> ឲ្យ $z = \cos\frac{\pi}{3} + i\sin\frac{\pi}{3}$ ។ ចូរគណនា $z^2$ ដោយប្រើរូបមន្តផលគុណទម្រង់ត្រីកោណមាត្រ។
+                    </div>
+                    <div id="reviewStep2" class="sol-step-item" style="border-left-color: var(--success); display: none;">
+                        <strong>២. ចម្លើយ៖</strong> $z^2 = z \cdot z = \cos\left(\frac{\pi}{3}+\frac{\pi}{3}\right) + i\sin\left(\frac{\pi}{3}+\frac{\pi}{3}\right) = \cos\frac{2\pi}{3} + i\sin\frac{2\pi}{3}$
+                    </div>
+                    <div id="reviewStep3" class="sol-step-item" style="border-left-color: var(--accent); display: none;">
+                        <strong>៣. សំណួរបណ្តុះការគិត៖</strong> ចុះបើចង់រក $z^{100}$ តើយើងត្រូវគុណ $100$ ដងឬ? មានវិធីខ្លីជាងនេះទេ?
                     </div>
                 </div>
             </section>
 
+            <!-- ==================== ២. ទំព័រទ្រឹស្តី (THEORY) ==================== -->
             <section id="theory" class="section">
                 <h2 class="title-moul">រូបមន្តស្នូល និងទ្រឹស្តីបទ</h2>
                 
-                <!-- ១. ដំណាក់កាលទី៣ (ការរកឃើញទម្រង់នៃ z^n) -->
-                <div class="info-box" style="border-color: #059669; background-color: #f0fdf4; margin-bottom: 1.5rem;">
-                    <h3 style="color: #059669; font-family: 'Moul', cursive; margin-bottom: 1rem;">
-                        <i class="fas fa-search"></i> ដំណាក់កាលទី៣ ៖ ការរកឃើញទម្រង់នៃ $z^n$
-                    </h3>
+                <!-- ១. ដំណាក់កាលទី៣ (ការរកឃើញទម្រង់នៃ z^n - Default ជំហានទី 1) -->
+                <div class="info-box" style="border-left-color: #059669;">
+                    <div class="mini-stepper-bar" style="background: rgba(5, 150, 105, 0.08);">
+                        <h3 style="color: #059669; font-family: 'Moul', cursive; font-size: 1.08rem;">
+                            <i class="fas fa-search"></i> ដំណាក់កាលទី៣ ៖ ការរកឃើញទម្រង់នៃ $z^n$
+                        </h3>
+                        <div style="display: flex; gap: 0.45rem; align-items: center;">
+                            <button class="mini-step-btn" id="discPrevBtn" style="background:#059669;" onclick="stepDiscovery(-1)">&lt; មុន</button>
+                            <span id="discStepLabel" style="font-size: 0.85rem; font-weight: bold; min-width: 95px; text-align: center;">ជំហាន 1 / 4</span>
+                            <button class="mini-step-btn" id="discNextBtn" style="background:#059669;" onclick="stepDiscovery(1)">បន្ទាប់ &gt;</button>
+                        </div>
+                    </div>
                     <p>ឲ្យ $z = r(\cos\theta + i\sin\theta)$ ។ ប្រើរូបមន្តផលគុណ $z_1z_2 = r_1r_2[\cos(\theta_1+\theta_2) + i\sin(\theta_1+\theta_2)]$ ៖</p>
                     
                     <div style="overflow-x: auto;">
-                        <table class="discovery-table">
+                        <table class="discovery-table" id="discTable">
                             <thead>
                                 <tr>
                                     <th>ស្វ័យគុណ</th>
@@ -570,15 +1016,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr id="discRow1" class="active-row">
                                     <td>$z^2 = z \cdot z$</td>
                                     <td>$r^2(\cos 2\theta + i\sin 2\theta)$</td>
                                 </tr>
-                                <tr>
+                                <tr id="discRow2" style="display: none;">
                                     <td>$z^3 = z^2 \cdot z$</td>
                                     <td>$r^3(\cos 3\theta + i\sin 3\theta)$</td>
                                 </tr>
-                                <tr>
+                                <tr id="discRow3" style="display: none;">
                                     <td>$z^4 = z^3 \cdot z$</td>
                                     <td>$r^4(\cos 4\theta + i\sin 4\theta)$</td>
                                 </tr>
@@ -586,132 +1032,232 @@
                         </table>
                     </div>
 
-                    <div class="conclusion-box">
+                    <div class="conclusion-box" id="discConclusion" style="display: none;">
                         <div class="conclusion-badge"><i class="fas fa-lightbulb"></i> ការសន្និដ្ឋាន</div>
-                        <p style="text-align: center; font-size: 1.1rem; color: #1f2937;">
+                        <p style="text-align: center; font-size: 1.08rem;">
                             ម៉ូឌុលត្រូវលើកស្វ័យគុណ $n$ ហើយអាគុយម៉ង់ត្រូវគុណនឹង $n$ ៖ <br>
-                            <span class="highlight" style="display: inline-block; margin-top: 0.5rem; padding: 0.5rem 1rem; font-size: 1.2rem;">$z^n = r^n(\cos n\theta + i\sin n\theta)$</span>
+                            <span class="highlight" style="display: inline-block; margin-top: 0.4rem; padding: 0.4rem 1rem; font-size: 1.15rem;">$z^n = r^n(\cos n\theta + i\sin n\theta)$</span>
                         </p>
                     </div>
                 </div>
 
                 <!-- ២. រូបមន្តដឺម័រ និងស្វ័យគុណទី n ទូទៅ -->
-                <div class="grid-2" style="margin-bottom: 1.5rem;">
-                    <div class="info-box" style="border-color: var(--primary); margin-bottom: 0;">
-                        <h3><i class="fas fa-crown" style="color: var(--accent)"></i> រូបមន្តដឺម័រ (De Moivre)</h3>
+                <div class="grid-2" style="margin-bottom: 1.35rem;">
+                    <div class="info-box" style="border-left-color: var(--primary); margin-bottom: 0;">
+                        <h3><i class="fas fa-crown" style="color: var(--accent)"></i> រូបមន្តដឺម័រ (De Moivre's Theorem)</h3>
                         <p>ចំពោះគ្រប់ចំនួនគត់ធម្មជាតិ $n$៖</p>
                         <div class="formula-box">
                             $$(\cos\theta + i\sin\theta)^n = \cos n\theta + i\sin n\theta$$
                         </div>
                     </div>
                     
-                    <div class="info-box" style="border-color: var(--secondary); margin-bottom: 0;">
-                        <h3><i class="fas fa-layer-group" style="color: var(--secondary)"></i> ស្វ័យគុណទី n នៃចំនួនកុំផ្លិចទូទៅ</h3>
+                    <div class="info-box" style="border-left-color: var(--secondary); margin-bottom: 0;">
+                        <h3><i class="fas fa-layer-group" style="color: var(--secondary)"></i> ស្វ័យគុណទី $n$ នៃចំនួនកុំផ្លិចទូទៅ</h3>
                         <p>បើ $z = r(\cos\theta + i\sin\theta)$ នោះពេលលើកជាស្វ័យគុណទី $n$៖</p>
-                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+                        <ul style="margin-left: 1.5rem; margin-top: 0.4rem;">
                             <li><span class="highlight">ម៉ូឌុល $r$</span> ត្រូវលើកស្វ័យគុណ $n$ ($r \rightarrow r^n$)</li>
                             <li><span class="highlight">អាគុយម៉ង់ $\theta$</span> ត្រូវគុណនឹង $n$ ($\theta \rightarrow n\theta$)</li>
                         </ul>
-                        <div class="formula-box" style="padding: 1rem;">
+                        <div class="formula-box" style="padding: 0.85rem; margin: 0.6rem 0 0 0;">
                             $$z^n = r^n(\cos n\theta + i\sin n\theta)$$
                         </div>
                     </div>
                 </div>
 
-                <!-- ៣. ស្រាយបញ្ជាក់រូបមន្តដឺម័រ -->
-                <div class="info-box" style="border-color: #f59e0b; background-color: #fffbeb; margin-bottom: 1.5rem;">
-                    <h3 style="color: #d97706;"><i class="fas fa-check-double"></i> ស្រាយបញ្ជាក់រូបមន្តដឺម័រ (តាមវិចារកំណើនគណិតវិទ្យា)</h3>
-                    <ul style="margin-left: 1.5rem; line-height: 2; margin-top: 0.5rem;">
-                        <li><strong>១. ពិនិត្យ៖</strong> ឲ្យ $n=1$, គេបាន $(\cos\theta + i\sin\theta)^1 = \cos\theta + i\sin\theta$ <span style="color:var(--success);font-weight:bold;">(ពិត)</span>។</li>
-                        <li><strong>២. សន្មតថាពិតដល់ $k$៖</strong> $(\cos\theta + i\sin\theta)^k = \cos k\theta + i\sin k\theta$ <span style="color:var(--success);font-weight:bold;">(ពិត)</span>។</li>
-                        <li><strong>៣. បង្ហាញថាពិតដល់ $k+1$៖</strong><br>
-                            $(\cos\theta + i\sin\theta)^{k+1} = (\cos k\theta + i\sin k\theta)(\cos\theta + i\sin\theta)$<br>
-                            $= (\cos k\theta\cos\theta - \sin k\theta\sin\theta) + i(\sin k\theta\cos\theta + \cos k\theta\sin\theta)$<br>
-                            $= \cos(k+1)\theta + i\sin(k+1)\theta$<br>
-                            <span class="highlight" style="display: inline-block; margin-top: 0.5rem; background-color: #fde68a;">ដូចនេះ រូបមន្តពិតចំពោះគ្រប់ $n \in \mathbb{N}^*$។</span>
-                        </li>
-                    </ul>
+                <!-- ៣. ស្រាយបញ្ជាក់រូបមន្តដឺម័រ (Default ជំហានទី 1) -->
+                <div class="info-box" style="border-left-color: #f59e0b;">
+                    <div class="mini-stepper-bar" style="background: rgba(245, 158, 11, 0.1);">
+                        <h3 style="color: #d97706;"><i class="fas fa-check-double"></i> ស្រាយបញ្ជាក់រូបមន្តដឺម័រ (តាមវិចារកំណើនគណិតវិទ្យា)</h3>
+                        <div style="display: flex; gap: 0.45rem; align-items: center;">
+                            <button class="mini-step-btn" id="proofPrevBtn" style="background:#d97706;" onclick="stepProof(-1)">&lt; មុន</button>
+                            <span id="proofStepLabel" style="font-size: 0.85rem; font-weight: bold; min-width: 90px; text-align: center;">ជំហាន 1 / 3</span>
+                            <button class="mini-step-btn" id="proofNextBtn" style="background:#d97706;" onclick="stepProof(1)">បន្ទាប់ &gt;</button>
+                        </div>
+                    </div>
+                    <div id="proofStep1" class="sol-step-item" style="border-left-color: #f59e0b;">
+                        <strong>១. ពិនិត្យ៖</strong> ឲ្យ $n=1$, គេបាន $(\cos\theta + i\sin\theta)^1 = \cos\theta + i\sin\theta$ <span style="color:var(--success);font-weight:bold;">(ពិត)</span>។
+                    </div>
+                    <div id="proofStep2" class="sol-step-item" style="border-left-color: #f59e0b; display: none;">
+                        <strong>២. សន្មតថាពិតដល់ $k$៖</strong> $(\cos\theta + i\sin\theta)^k = \cos k\theta + i\sin k\theta$ <span style="color:var(--success);font-weight:bold;">(ពិត)</span>។
+                    </div>
+                    <div id="proofStep3" class="sol-step-item" style="border-left-color: var(--success); display: none;">
+                        <strong>៣. បង្ហាញថាពិតដល់ $k+1$៖</strong><br>
+                        $(\cos\theta + i\sin\theta)^{k+1} = (\cos k\theta + i\sin k\theta)(\cos\theta + i\sin\theta)$<br>
+                        $= (\cos k\theta\cos\theta - \sin k\theta\sin\theta) + i(\sin k\theta\cos\theta + \cos k\theta\sin\theta) = \cos(k+1)\theta + i\sin(k+1)\theta$<br>
+                        <span class="highlight" style="display: inline-block; margin-top: 0.35rem;">ដូចនេះ រូបមន្តពិតចំពោះគ្រប់ $n \in \mathbb{N}^*$ ។</span>
+                    </div>
                 </div>
 
-                <!-- ៤. ការបកស្រាយធរណីមាត្រ និង ៥. ស្វ័យគុណអវិជ្ជមាន -->
+                <!-- ៤. ការបកស្រាយធរណីមាត្រ និង ៥. ករណីស្វ័យគុណអវិជ្ជមាន -->
                 <div class="grid-2">
-                    <div class="info-box" style="border-color: #8b5cf6; margin-bottom: 0;">
-                        <h3 style="color: #8b5cf6;"><i class="fas fa-compass"></i> ការបកស្រាយធរណីមាត្រ</h3>
-                        <p>ឲ្យ $z = \cos\theta + i\sin\theta$ (មាន $r=1, \text{មុំ } \theta$)។ តាមរូបមន្តដឺម័រ៖</p>
-                        <div style="text-align: center; margin: 1rem 0; font-size: 1.2rem; font-weight: bold;">
-                            $z^k = \cos k\theta + i\sin k\theta$
+                    <div class="info-box" style="border-left-color: #8b5cf6; margin-bottom: 0;">
+                        <h3 style="color: #8b5cf6;"><i class="fas fa-compass"></i> ការបកស្រាយធរណីមាត្រ (GeoGebra)</h3>
+                        <p style="margin-top: 0.35rem;">
+                            ឲ្យ $z = \cos\theta + i\sin\theta$ (មាន $r = 1$, មុំ $\theta = \frac{\pi}{6} = 30^\circ$)។ តាមរូបមន្តដឺម័រ៖
+                        </p>
+                        <div style="text-align: center; margin: 0.45rem 0; font-size: 1.2rem; font-weight: bold;">
+                            $$z^k = \cos k\theta + i\sin k\theta$$
                         </div>
-                        <div style="background: white; padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid #8b5cf6; box-shadow: var(--shadow-sm);">
+
+                        <!-- រូបភាពក្រាបធរណីមាត្រ GeoGebra អន្តរកម្ម (Default ចាប់ផ្តើមពីជំហានទី 1: z^1) -->
+                        <div class="geogebra-card">
+                            <svg viewBox="0 0 430 240" class="geogebra-svg" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <marker id="axis-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#1e293b" />
+                                    </marker>
+                                    <marker id="vec-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb" />
+                                    </marker>
+                                </defs>
+
+                                <!-- Grid & Axes -->
+                                <line x1="25" y1="205" x2="390" y2="205" stroke="#1e293b" stroke-width="2" marker-end="url(#axis-arrow)" />
+                                <line x1="205" y1="225" x2="205" y2="20" stroke="#1e293b" stroke-width="2" marker-end="url(#axis-arrow)" />
+                                <text x="396" y="210" font-family="serif" font-size="18" font-weight="bold" fill="#1e293b">Re</text>
+                                <text x="193" y="15" font-family="serif" font-size="18" font-weight="bold" fill="#1e293b">Im</text>
+                                <text x="210" y="222" font-family="serif" font-size="14" font-weight="bold" fill="#475569">O</text>
+
+                                <!-- Dashed Unit Semicircle (radius = 150) -->
+                                <path d="M 355 205 A 150 150 0 0 0 55 205" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,6" />
+
+                                <!-- Angle Arc theta -->
+                                <path d="M 262 205 A 57 57 0 0 0 254.3 176.5" fill="none" stroke="#059669" stroke-width="2.5" />
+                                <text x="272" y="193" font-family="serif" font-style="italic" font-size="17" font-weight="bold" fill="#059669">θ</text>
+
+                                <!-- z^1 (30 deg) -->
+                                <g id="geoVec1" class="geo-vector highlighted">
+                                    <line x1="205" y1="205" x2="327" y2="134.5" stroke="#2563eb" stroke-width="2.2" marker-end="url(#vec-arrow)" />
+                                    <circle cx="334.9" cy="130" r="6.5" fill="#dc2626" stroke="#fff" stroke-width="1.5" />
+                                    <text x="346" y="130" font-family="serif" font-weight="bold" font-size="17" fill="#0f172a">z¹</text>
+                                </g>
+
+                                <!-- z^2 (60 deg) -->
+                                <g id="geoVec2" class="geo-vector dimmed">
+                                    <line x1="205" y1="205" x2="275.5" y2="82.9" stroke="#2563eb" stroke-width="2.2" marker-end="url(#vec-arrow)" />
+                                    <circle cx="280" cy="75.1" r="6.5" fill="#dc2626" stroke="#fff" stroke-width="1.5" />
+                                    <text x="287" y="67" font-family="serif" font-weight="bold" font-size="17" fill="#0f172a">z²</text>
+                                </g>
+
+                                <!-- z^3 (90 deg) -->
+                                <g id="geoVec3" class="geo-vector dimmed">
+                                    <line x1="205" y1="205" x2="205" y2="64" stroke="#2563eb" stroke-width="2.2" marker-end="url(#vec-arrow)" />
+                                    <circle cx="205" cy="55" r="6.5" fill="#dc2626" stroke="#fff" stroke-width="1.5" />
+                                    <text x="180" y="48" font-family="serif" font-weight="bold" font-size="17" fill="#0f172a">z³</text>
+                                </g>
+
+                                <!-- z^4 (120 deg) -->
+                                <g id="geoVec4" class="geo-vector dimmed">
+                                    <line x1="205" y1="205" x2="134.5" y2="82.9" stroke="#2563eb" stroke-width="2.2" marker-end="url(#vec-arrow)" />
+                                    <circle cx="130" cy="75.1" r="6.5" fill="#dc2626" stroke="#fff" stroke-width="1.5" />
+                                    <text x="103" y="67" font-family="serif" font-weight="bold" font-size="17" fill="#0f172a">z⁴</text>
+                                </g>
+
+                                <!-- z^5 (150 deg) -->
+                                <g id="geoVec5" class="geo-vector dimmed">
+                                    <line x1="205" y1="205" x2="82.9" y2="134.5" stroke="#2563eb" stroke-width="2.2" marker-end="url(#vec-arrow)" />
+                                    <circle cx="75.1" cy="130" r="6.5" fill="#dc2626" stroke="#fff" stroke-width="1.5" />
+                                    <text x="47" y="128" font-family="serif" font-weight="bold" font-size="17" fill="#0f172a">z⁵</text>
+                                </g>
+
+                                <!-- z^6 (180 deg) -->
+                                <g id="geoVec6" class="geo-vector dimmed">
+                                    <line x1="205" y1="205" x2="64" y2="205" stroke="#2563eb" stroke-width="2.2" marker-end="url(#vec-arrow)" />
+                                    <circle cx="55" cy="205" r="6.5" fill="#dc2626" stroke="#fff" stroke-width="1.5" />
+                                    <text x="28" y="197" font-family="serif" font-weight="bold" font-size="17" fill="#0f172a">z⁶</text>
+                                </g>
+                            </svg>
+
+                            <!-- ប៊ូតុងបញ្ជាក្រាប GeoGebra (< > និង Play) -->
+                            <div class="geo-controls">
+                                <button class="geo-btn" onclick="stepGeoGebra(-1)" title="ថយក្រោយ">&lt; មុន</button>
+                                <span id="geoStatusText" class="geo-status-pill">ជំហាន 1/6 : z¹ (30°)</span>
+                                <button class="geo-btn" onclick="stepGeoGebra(1)" title="បន្ទាប់">បន្ទាប់ &gt;</button>
+                                <button class="geo-btn" id="geoPlayBtn" onclick="toggleGeoPlay()"><i class="fas fa-play"></i> វិលស្វ័យប្រវត្តិ</button>
+                                <button class="geo-btn" onclick="showAllGeoGebra()"><i class="fas fa-eye"></i> ទាំងអស់</button>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(139, 92, 246, 0.08); padding: 0.85rem 1rem; border-radius: var(--radius-md); border-left: 4px solid #8b5cf6;">
                             <strong>សង្កេត៖</strong> រាល់ការគុណនឹង $z$ មួយដង ចំណុចរូបភាពវិលជុំវិញគល់ $O$ មួយមុំ $\theta$ (ដោយម៉ូឌុលរក្សាតម្លៃនៅដដែល)។
                         </div>
                     </div>
 
-                    <div class="info-box" style="border-color: var(--success); background-color: #f0fdf4; margin-bottom: 0;">
-                        <h3><i class="fas fa-bolt" style="color: var(--success)"></i> ករណីស្វ័យគុណអវិជ្ជមាន</h3>
-                        <p>រូបមន្តដឺម័រក៏ពិតចំពោះស្វ័យគុណ $n \in \mathbb{Z}$ (អវិជ្ជមាន) ផងដែរ៖</p>
-                        <div class="formula-box" style="padding: 1rem;">
+                    <div class="info-box" style="border-left-color: var(--success); margin-bottom: 0; display: flex; flex-direction: column; justify-content: center;">
+                        <h3><i class="fas fa-bolt" style="color: var(--success)"></i> ករណីស្វ័យគុណអវិជ្ជមាន ($n \in \mathbb{Z}$)</h3>
+                        <p style="margin-top: 0.4rem;">រូបមន្តដឺម័រក៏ពិតចំពោះស្វ័យគុណគត់អវិជ្ជមានផងដែរ៖</p>
+                        <div class="formula-box" style="padding: 1.15rem; margin: 1.1rem 0;">
                             $$(\cos\theta + i\sin\theta)^{-n} = \cos n\theta - i\sin n\theta$$
                         </div>
-                        <p style="font-size: 0.9rem; color: var(--text-muted);">ឧទាហរណ៍៖ $(\cos\frac{\pi}{6} + i\sin\frac{\pi}{6})^{-2} = \cos\frac{\pi}{3} - i\sin\frac{\pi}{3}$</p>
+                        <div style="background: rgba(16, 185, 129, 0.08); padding: 1rem 1.15rem; border-radius: var(--radius-md); border-left: 4px solid var(--success); line-height: 2;">
+                            <strong>ឧទាហរណ៍អនុវត្ត៖</strong><br>
+                            គណនា $\left(\cos\frac{\pi}{6} + i\sin\frac{\pi}{6}\right)^{-2}$<br>
+                            $= \cos\left(2 \cdot \frac{\pi}{6}\right) - i\sin\left(2 \cdot \frac{\pi}{6}\right)$<br>
+                            $= \cos\frac{\pi}{3} - i\sin\frac{\pi}{3} =$ <span class="highlight" style="color: #dc2626;">$\frac{1}{2} - i\frac{\sqrt{3}}{2}$</span>
+                        </div>
                     </div>
                 </div>
             </section>
 
+            <!-- ==================== ៣. ជំហានគណនា (STEPS) ==================== -->
             <section id="steps" class="section">
                 <h2 class="title-moul">របៀបដោះស្រាយមួយជំហានម្តងៗ</h2>
-                <p style="text-align: center; margin-bottom: 2rem; color: var(--text-muted);">ឧទាហរណ៍៖ ចូរគណនា $(1+i)^6$ រួចសរសេរលទ្ធផលជាទម្រង់ $a+bi$ ។</p>
+                
+                <div class="mini-stepper-bar" style="max-width: 820px; margin: 0 auto 1.35rem auto;">
+                    <span><strong>ឧទាហរណ៍គំរូ៖</strong> គណនា $(1+i)^6$ រួចសរសេរជាទម្រង់ $a+bi$</span>
+                    <div style="display: flex; gap: 0.45rem; align-items: center;">
+                        <button class="mini-step-btn" id="calcPrevBtn" onclick="highlightCalcStep(-1)">&lt; ជំហានមុន</button>
+                        <span id="calcStepBadge" style="font-weight: bold; font-size: 0.88rem; min-width: 110px; text-align: center;">ជំហានទី 1 / 3</span>
+                        <button class="mini-step-btn" id="calcNextBtn" onclick="highlightCalcStep(1)">ជំហានបន្ទាប់ &gt;</button>
+                    </div>
+                </div>
 
                 <div class="step-container">
                     <!-- Step 1 -->
-                    <div class="step-card">
+                    <div class="step-card step-focused" id="calcCard1">
                         <div class="step-number">១</div>
                         <div style="flex: 1;">
-                            <h3 style="color: var(--primary); margin-bottom: 0.5rem;">បម្លែង $z$ ទៅទម្រង់ត្រីកោណមាត្រ</h3>
-                            <p>តាង $z = 1+i$ ។ យើងត្រូវរកម៉ូឌុល $r$ និងអាគុយម៉ង់ $\theta$ ។</p>
-                            <div style="background: #f8fafc; padding: 1rem; border-radius: var(--radius-md); margin-top: 0.5rem;">
-                                $r = \sqrt{1^2 + 1^2} = \sqrt{2}$<br>
-                                $\cos\theta = \frac{a}{r} = \frac{1}{\sqrt{2}}$ និង $\sin\theta = \frac{b}{r} = \frac{1}{\sqrt{2}}$ $\Rightarrow \theta = \frac{\pi}{4}$<br><br>
-                                ដូចនេះទម្រង់ត្រីកោណមាត្រគឺ៖ <strong>$z = \sqrt{2}(\cos\frac{\pi}{4} + i\sin\frac{\pi}{4})$</strong>
+                            <h3 style="color: var(--primary); margin-bottom: 0.4rem;">បម្លែង $z$ ទៅទម្រង់ត្រីកោណមាត្រ (រក $r$ និងមុំ $\theta$)</h3>
+                            <p>តាង $z = 1+i$ ។ យើងត្រូវរកម៉ូឌុល $r$ និងអាគុយម៉ង់ $\theta$ ៖</p>
+                            <div style="background: rgba(79,70,229,0.06); padding: 0.85rem 1rem; border-radius: var(--radius-md); margin-top: 0.4rem;">
+                                $r = \sqrt{1^2 + 1^2} = \sqrt{2}$ , $\cos\theta = \frac{1}{\sqrt{2}}$ និង $\sin\theta = \frac{1}{\sqrt{2}} \Rightarrow \theta = \frac{\pi}{4}$<br>
+                                ដូចនេះទម្រង់ត្រីកោណមាត្រគឺ៖ <strong>$1+i = \sqrt{2}\left(\cos\frac{\pi}{4} + i\sin\frac{\pi}{4}\right)$</strong>
                             </div>
                         </div>
                     </div>
 
                     <!-- Step 2 -->
-                    <div class="step-card">
-                        <div class="step-number" style="background: var(--secondary);">២</div>
+                    <div class="step-card" id="calcCard2" style="display: none;">
+                        <div class="step-number" style="background: linear-gradient(135deg, var(--secondary), #38bdf8);">២</div>
                         <div style="flex: 1;">
-                            <h3 style="color: var(--secondary); margin-bottom: 0.5rem;">អនុវត្តរូបមន្តដឺម័រ (លើកស្វ័យគុណ n=6)</h3>
-                            <p>យក $r$ ស្វ័យគុណ ៦ និងយក $\theta$ គុណនឹង ៦។</p>
-                            <div style="background: #f8fafc; padding: 1rem; border-radius: var(--radius-md); margin-top: 0.5rem;">
-                                $(1+i)^6 = \left[ \sqrt{2}(\cos\frac{\pi}{4} + i\sin\frac{\pi}{4}) \right]^6$<br><br>
-                                $= (\sqrt{2})^6 \left( \cos\frac{6\pi}{4} + i\sin\frac{6\pi}{4} \right)$<br>
-                                $= 8 \left( \cos\frac{3\pi}{2} + i\sin\frac{3\pi}{2} \right)$
+                            <h3 style="color: var(--secondary); margin-bottom: 0.4rem;">អនុវត្តរូបមន្តដឺម័រ ($r \rightarrow r^n$ និង $\theta \rightarrow n\theta$)</h3>
+                            <p>លើកម៉ូឌុល $r$ ស្វ័យគុណ $6$ និងយកមុំ $\theta$ គុណនឹង $6$ ៖</p>
+                            <div style="background: rgba(14,165,233,0.06); padding: 0.85rem 1rem; border-radius: var(--radius-md); margin-top: 0.4rem;">
+                                $(1+i)^6 = (\sqrt{2})^6 \left( \cos\frac{6\pi}{4} + i\sin\frac{6\pi}{4} \right) = 8 \left( \cos\frac{3\pi}{2} + i\sin\frac{3\pi}{2} \right)$
                             </div>
                         </div>
                     </div>
 
                     <!-- Step 3 -->
-                    <div class="step-card">
-                        <div class="step-number" style="background: var(--success);">៣</div>
+                    <div class="step-card" id="calcCard3" style="display: none;">
+                        <div class="step-number" style="background: linear-gradient(135deg, var(--success), #34d399);">៣</div>
                         <div style="flex: 1;">
-                            <h3 style="color: var(--success); margin-bottom: 0.5rem;">សរសេរលទ្ធផលចុងក្រោយ (ទម្រង់ $a+bi$)</h3>
-                            <p>គណនាតម្លៃនៃមុំត្រីកោណមាត្រដែលទទួលបាន។</p>
-                            <div style="background: #f0fdf4; padding: 1rem; border-radius: var(--radius-md); margin-top: 0.5rem;">
-                                ដោយ $\cos\frac{3\pi}{2} = 0$ និង $\sin\frac{3\pi}{2} = -1$<br><br>
-                                គេបាន៖ $= 8 (0 + i(-1))$<br>
-                                ចម្លើយចុងក្រោយ៖ <strong>$= -8i$</strong>
+                            <h3 style="color: var(--success); margin-bottom: 0.4rem;">សរសេរលទ្ធផលចុងក្រោយជាទម្រង់ $a+bi$ និងផ្ទៀងផ្ទាត់</h3>
+                            <div style="background: rgba(16,185,129,0.08); padding: 0.85rem 1rem; border-radius: var(--radius-md); margin-top: 0.4rem;">
+                                ដោយ $\cos\frac{3\pi}{2} = 0$ និង $\sin\frac{3\pi}{2} = -1$ គេបាន៖ $= 8 (0 - i) =$ <span class="highlight" style="color: #dc2626; font-size: 1.15rem;">$-8i$</span><br>
+                                <strong><i class="fas fa-check-circle" style="color: var(--success);"></i> ផ្ទៀងផ្ទាត់៖</strong> $(1+i)^2 = 2i \Rightarrow (1+i)^6 = (2i)^3 = 8i^3 = -8i$ (ពិត)
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
+            <!-- ==================== ៤. កាតរំលឹក (FLASHCARDS - 3 កាតស្នូល) ==================== -->
             <section id="flashcards" class="section">
-                <h2 class="title-moul">កាតរំលឹកមេរៀន (Flashcards)</h2>
-                <p style="text-align: center; margin-bottom: 2rem;">ចុចលើកាតនីមួយៗ ដើម្បីមើលចម្លើយនៅខាងក្រោយ! ជាវិធីល្អបំផុតសម្រាប់ទន្ទេញរូបមន្ត។</p>
+                <h2 class="title-moul">កាតរំលឹកមេរៀន (3D Flashcards)</h2>
+                <p style="text-align: center; margin-bottom: 1.5rem; color: var(--text-muted);">ចុចលើកាតនីមួយៗ ដើម្បីត្រឡប់មើលចម្លើយនៅខាងក្រោយ!</p>
 
                 <div class="flashcard-grid">
-                    <!-- Card 1 -->
                     <div class="flashcard" onclick="toggleCard(this)">
                         <div class="flashcard-inner">
                             <div class="flashcard-front">
@@ -720,26 +1266,24 @@
                                 <span class="hint"><i class="fas fa-hand-pointer"></i> ចុចដើម្បីមើលចម្លើយ</span>
                             </div>
                             <div class="flashcard-back">
-                                <div>$= \cos n\theta + i\sin n\theta$</div>
+                                <div>$$= \cos n\theta + i\sin n\theta$$</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Card 2 -->
                     <div class="flashcard" onclick="toggleCard(this)">
                         <div class="flashcard-inner">
                             <div class="flashcard-front">
-                                <h3>ស្វ័យគុណទូទៅ</h3>
+                                <h3>ស្វ័យគុណទី $n$ ទូទៅ</h3>
                                 <p>បើ $z = r(\cos\theta + i\sin\theta)$<br>តើ $z^n = ?$</p>
                                 <span class="hint"><i class="fas fa-hand-pointer"></i> ចុចដើម្បីមើលចម្លើយ</span>
                             </div>
                             <div class="flashcard-back">
-                                <div>$z^n = r^n(\cos n\theta + i\sin n\theta)$</div>
+                                <div>$$z^n = r^n(\cos n\theta + i\sin n\theta)$$</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Card 3 -->
                     <div class="flashcard" onclick="toggleCard(this)">
                         <div class="flashcard-inner">
                             <div class="flashcard-front">
@@ -748,48 +1292,57 @@
                                 <span class="hint"><i class="fas fa-hand-pointer"></i> ចុចដើម្បីមើលចម្លើយ</span>
                             </div>
                             <div class="flashcard-back">
-                                <div>$= \cos n\theta - i\sin n\theta$</div>
+                                <div>$$= \cos n\theta - i\sin n\theta$$</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
+            <!-- ==================== ៥. លំហាត់អនុវត្តន៍ (PRACTICE) ==================== -->
             <section id="practice" class="section">
-                <h2 class="title-moul">លំហាត់អនុវត្តន៍ (សាកល្បងដោយខ្លួនឯង)</h2>
-                <p style="text-align: center; margin-bottom: 2rem;">សាកល្បងគណនាលំហាត់ខាងក្រោម រួចចុច "បង្ហាញចម្លើយ" ដើម្បីផ្ទៀងផ្ទាត់។</p>
+                <h2 class="title-moul">លំហាត់អនុវត្តន៍ និងសន្លឹកកិច្ចការ</h2>
+                <p style="text-align: center; margin-bottom: 1.5rem; color: var(--text-muted);">ចុច <strong>«បង្ហាញជំហានចម្លើយ»</strong> រួចប្រើប៊ូតុង <strong>`&lt;` `&gt;`</strong> ដើម្បីពន្យល់ម្តងមួយជំហាន។</p>
 
                 <!-- Exercise 1 -->
                 <div class="exercise-card">
                     <div class="exercise-header">
                         <span>១. គណនា $A = (\sqrt{3} + i)^{10}$ ដោយប្រើរូបមន្តដឺម័រ។</span>
-                        <button class="btn-toggle" onclick="toggleSolution('sol1')"><i class="fas fa-eye"></i> បង្ហាញចម្លើយ</button>
+                        <button class="btn-toggle" onclick="toggleSolution('sol1', this)"><i class="fas fa-eye"></i> បង្ហាញចម្លើយ</button>
                     </div>
                     <div id="sol1" class="solution-box">
-                        <p><strong>ដំណោះស្រាយ៖</strong></p>
-                        <ul style="margin-left: 20px; line-height: 2;">
-                            <li>ទម្រង់ត្រីកោណមាត្រនៃ $\sqrt{3}+i$ គឺ ម៉ូឌុល $r = \sqrt{3+1}=2$, មុំ $\theta = \frac{\pi}{6}$ ។ $\Rightarrow 2(\cos\frac{\pi}{6} + i\sin\frac{\pi}{6})$</li>
-                            <li>អនុវត្តដឺម័រ៖ $A = 2^{10}(\cos\frac{10\pi}{6} + i\sin\frac{10\pi}{6}) = 1024(\cos\frac{5\pi}{3} + i\sin\frac{5\pi}{3})$</li>
-                            <li>តម្លៃមុំ៖ $\cos\frac{5\pi}{3} = \frac{1}{2}$ និង $\sin\frac{5\pi}{3} = -\frac{\sqrt{3}}{2}$</li>
-                            <li>ចម្លើយចុងក្រោយ៖ $A = 1024(\frac{1}{2} - i\frac{\sqrt{3}}{2}) = $ <span class="highlight" style="color:red">$512 - 512\sqrt{3}i$</span></li>
-                        </ul>
+                        <div class="mini-stepper-bar" style="margin-bottom: 0.7rem;">
+                            <strong style="color: var(--primary);">ដំណោះស្រាយលំហាត់ទី ១ ៖</strong>
+                            <div style="display: flex; gap: 0.4rem; align-items: center;">
+                                <button class="mini-step-btn" onclick="stepEx(1, -1)">&lt; មុន</button>
+                                <span id="exLabel1" style="font-size: 0.82rem; font-weight: bold;">ជំហាន 1 / 3</span>
+                                <button class="mini-step-btn" onclick="stepEx(1, 1)">បន្ទាប់ &gt;</button>
+                            </div>
+                        </div>
+                        <div id="ex1_1" class="sol-step-item"><strong>ជំហានទី១៖</strong> ម៉ូឌុល $r = \sqrt{3+1}=2$, មុំ $\theta = \frac{\pi}{6} \Rightarrow \sqrt{3}+i = 2\left(\cos\frac{\pi}{6} + i\sin\frac{\pi}{6}\right)$</div>
+                        <div id="ex1_2" class="sol-step-item" style="display:none;"><strong>ជំហានទី២៖</strong> $A = 2^{10}\left(\cos\frac{10\pi}{6} + i\sin\frac{10\pi}{6}\right) = 1024\left(\cos\frac{5\pi}{3} + i\sin\frac{5\pi}{3}\right)$</div>
+                        <div id="ex1_3" class="sol-step-item" style="border-left-color: var(--success); display:none;"><strong>ជំហានទី៣៖</strong> ដោយ $\cos\frac{5\pi}{3} = \frac{1}{2}$ និង $\sin\frac{5\pi}{3} = -\frac{\sqrt{3}}{2} \Rightarrow A = 1024\left(\frac{1}{2} - i\frac{\sqrt{3}}{2}\right) =$ <span class="highlight" style="color:red">$512 - 512\sqrt{3}i$</span></div>
                     </div>
                 </div>
 
                 <!-- Exercise 2 -->
                 <div class="exercise-card">
                     <div class="exercise-header">
-                        <span>២. គណនា $B = \left(-\frac{1}{2} + i\frac{\sqrt{3}}{2}\right)^{2026}$</span>
-                        <button class="btn-toggle" onclick="toggleSolution('sol2')"><i class="fas fa-eye"></i> បង្ហាញចម្លើយ</button>
+                        <span>២. គណនា $B = \left(-\frac{1}{2} + i\frac{\sqrt{3}}{2}\right)^{2026}$ (កិច្ចការផ្ទះ)</span>
+                        <button class="btn-toggle" onclick="toggleSolution('sol2', this)"><i class="fas fa-eye"></i> បង្ហាញចម្លើយ</button>
                     </div>
                     <div id="sol2" class="solution-box">
-                        <p><strong>ដំណោះស្រាយ៖</strong></p>
-                        <ul style="margin-left: 20px; line-height: 2;">
-                            <li>ម៉ូឌុល $r=1$ , មុំ $\theta = \frac{2\pi}{3}$</li>
-                            <li>មុំថ្មី៖ $n\theta = 2026 \times \frac{2\pi}{3} = \frac{4052\pi}{3} = 1350\pi + \frac{2\pi}{3} = 675(2\pi) + \frac{2\pi}{3}$</li>
-                            <li>ដោយសារ $675(2\pi)$ គឺវិលជុំវិញរង្វង់គ្រប់ជុំ ទើបនៅសល់ត្រឹមមុំ $\frac{2\pi}{3}$ ជារង្វាស់គោល។</li>
-                            <li>ចម្លើយចុងក្រោយ៖ $B = \cos\frac{2\pi}{3} + i\sin\frac{2\pi}{3} = $ <span class="highlight" style="color:red">$-\frac{1}{2} + i\frac{\sqrt{3}}{2}$</span></li>
-                        </ul>
+                        <div class="mini-stepper-bar" style="margin-bottom: 0.7rem;">
+                            <strong style="color: var(--primary);">ដំណោះស្រាយលំហាត់ទី ២ ៖</strong>
+                            <div style="display: flex; gap: 0.4rem; align-items: center;">
+                                <button class="mini-step-btn" onclick="stepEx(2, -1)">&lt; មុន</button>
+                                <span id="exLabel2" style="font-size: 0.82rem; font-weight: bold;">ជំហាន 1 / 3</span>
+                                <button class="mini-step-btn" onclick="stepEx(2, 1)">បន្ទាប់ &gt;</button>
+                            </div>
+                        </div>
+                        <div id="ex2_1" class="sol-step-item"><strong>ជំហានទី១៖</strong> ម៉ូឌុល $r=1$ និងមុំ $\theta = \frac{2\pi}{3}$</div>
+                        <div id="ex2_2" class="sol-step-item" style="display:none;"><strong>ជំហានទី២៖</strong> មុំថ្មី $n\theta = 2026 \times \frac{2\pi}{3} = \frac{4052\pi}{3} = 1350\pi + \frac{2\pi}{3} = 675(2\pi) + \frac{2\pi}{3}$</div>
+                        <div id="ex2_3" class="sol-step-item" style="border-left-color: var(--success); display:none;"><strong>ជំហានទី៣៖</strong> $B = \cos\frac{2\pi}{3} + i\sin\frac{2\pi}{3} =$ <span class="highlight" style="color:red">$-\frac{1}{2} + i\frac{\sqrt{3}}{2}$</span></div>
                     </div>
                 </div>
                 
@@ -797,16 +1350,19 @@
                 <div class="exercise-card">
                     <div class="exercise-header">
                         <span>៣. គណនា $\left[2\left(\cos\frac{\pi}{4} + i\sin\frac{\pi}{4}\right)\right]^4$</span>
-                        <button class="btn-toggle" onclick="toggleSolution('sol3')"><i class="fas fa-eye"></i> បង្ហាញចម្លើយ</button>
+                        <button class="btn-toggle" onclick="toggleSolution('sol3', this)"><i class="fas fa-eye"></i> បង្ហាញចម្លើយ</button>
                     </div>
                     <div id="sol3" class="solution-box">
-                        <p><strong>ដំណោះស្រាយ៖</strong></p>
-                        <ul style="margin-left: 20px; line-height: 2;">
-                            <li>លំហាត់នេះមានទម្រង់ត្រីកោណមាត្រស្រាប់! គ្រាន់តែអនុវត្តរូបមន្តយកតែម្តង។</li>
-                            <li>$= 2^4 (\cos\frac{4\pi}{4} + i\sin\frac{4\pi}{4})$</li>
-                            <li>$= 16 (\cos\pi + i\sin\pi)$</li>
-                            <li>ដោយ $\cos\pi = -1$ និង $\sin\pi = 0$ នោះលទ្ធផលគឺ $= 16(-1 + 0) = $ <span class="highlight" style="color:red">$-16$</span></li>
-                        </ul>
+                        <div class="mini-stepper-bar" style="margin-bottom: 0.7rem;">
+                            <strong style="color: var(--primary);">ដំណោះស្រាយលំហាត់ទី ៣ ៖</strong>
+                            <div style="display: flex; gap: 0.4rem; align-items: center;">
+                                <button class="mini-step-btn" onclick="stepEx(3, -1)">&lt; មុន</button>
+                                <span id="exLabel3" style="font-size: 0.82rem; font-weight: bold;">ជំហាន 1 / 2</span>
+                                <button class="mini-step-btn" onclick="stepEx(3, 1)">បន្ទាប់ &gt;</button>
+                            </div>
+                        </div>
+                        <div id="ex3_1" class="sol-step-item"><strong>ជំហានទី១៖</strong> អនុវត្តរូបមន្តដឺម័រផ្ទាល់៖ $= 2^4 \left(\cos\frac{4\pi}{4} + i\sin\frac{4\pi}{4}\right) = 16 (\cos\pi + i\sin\pi)$</div>
+                        <div id="ex3_2" class="sol-step-item" style="border-left-color: var(--success); display:none;"><strong>ជំហានទី២៖</strong> ដោយ $\cos\pi = -1$ និង $\sin\pi = 0 \Rightarrow 16(-1 + 0) =$ <span class="highlight" style="color:red">$-16$</span></div>
                     </div>
                 </div>
 
@@ -814,17 +1370,19 @@
                 <div class="exercise-card">
                     <div class="exercise-header">
                         <span>៤. គណនា $C = \left(\cos\frac{\pi}{6} + i\sin\frac{\pi}{6}\right)^{-2}$ (ករណីស្វ័យគុណអវិជ្ជមាន)</span>
-                        <button class="btn-toggle" onclick="toggleSolution('sol4')"><i class="fas fa-eye"></i> បង្ហាញចម្លើយ</button>
+                        <button class="btn-toggle" onclick="toggleSolution('sol4', this)"><i class="fas fa-eye"></i> បង្ហាញចម្លើយ</button>
                     </div>
                     <div id="sol4" class="solution-box">
-                        <p><strong>ដំណោះស្រាយ៖</strong></p>
-                        <ul style="margin-left: 20px; line-height: 2;">
-                            <li>អនុវត្តរូបមន្តដឺម័រសម្រាប់ស្វ័យគុណអវិជ្ជមាន៖ $(\cos\theta + i\sin\theta)^{-n} = \cos n\theta - i\sin n\theta$</li>
-                            <li>គេបាន៖ $C = \cos\left(2 \times \frac{\pi}{6}\right) - i\sin\left(2 \times \frac{\pi}{6}\right)$</li>
-                            <li>សម្រួលមុំ៖ $C = \cos\frac{\pi}{3} - i\sin\frac{\pi}{3}$</li>
-                            <li>ជំនួសតម្លៃត្រីកោណមាត្រ៖ $\cos\frac{\pi}{3} = \frac{1}{2}$ និង $\sin\frac{\pi}{3} = \frac{\sqrt{3}}{2}$</li>
-                            <li>ចម្លើយចុងក្រោយ៖ $C = $ <span class="highlight" style="color:red">$\frac{1}{2} - i\frac{\sqrt{3}}{2}$</span></li>
-                        </ul>
+                        <div class="mini-stepper-bar" style="margin-bottom: 0.7rem;">
+                            <strong style="color: var(--primary);">ដំណោះស្រាយលំហាត់ទី ៤ ៖</strong>
+                            <div style="display: flex; gap: 0.4rem; align-items: center;">
+                                <button class="mini-step-btn" onclick="stepEx(4, -1)">&lt; មុន</button>
+                                <span id="exLabel4" style="font-size: 0.82rem; font-weight: bold;">ជំហាន 1 / 2</span>
+                                <button class="mini-step-btn" onclick="stepEx(4, 1)">បន្ទាប់ &gt;</button>
+                            </div>
+                        </div>
+                        <div id="ex4_1" class="sol-step-item"><strong>ជំហានទី១៖</strong> តាមរូបមន្ត $(\cos\theta + i\sin\theta)^{-n} = \cos n\theta - i\sin n\theta \Rightarrow C = \cos\left(2 \times \frac{\pi}{6}\right) - i\sin\left(2 \times \frac{\pi}{6}\right)$</div>
+                        <div id="ex4_2" class="sol-step-item" style="border-left-color: var(--success); display:none;"><strong>ជំហានទី២៖</strong> $C = \cos\frac{\pi}{3} - i\sin\frac{\pi}{3} =$ <span class="highlight" style="color:red">$\frac{1}{2} - i\frac{\sqrt{3}}{2}$</span></div>
                     </div>
                 </div>
 
@@ -832,18 +1390,19 @@
                 <div class="exercise-card">
                     <div class="exercise-header">
                         <span>៥. គណនា $D = \left[ \sqrt{2}\left(\cos\frac{\pi}{12} + i\sin\frac{\pi}{12}\right) \right]^6$</span>
-                        <button class="btn-toggle" onclick="toggleSolution('sol5')"><i class="fas fa-eye"></i> បង្ហាញចម្លើយ</button>
+                        <button class="btn-toggle" onclick="toggleSolution('sol5', this)"><i class="fas fa-eye"></i> បង្ហាញចម្លើយ</button>
                     </div>
                     <div id="sol5" class="solution-box">
-                        <p><strong>ដំណោះស្រាយ៖</strong></p>
-                        <ul style="margin-left: 20px; line-height: 2;">
-                            <li>លំហាត់នេះមានទម្រង់ត្រីកោណមាត្រស្រាប់។ អនុវត្តរូបមន្ត $z^n = r^n(\cos n\theta + i\sin n\theta)$</li>
-                            <li><strong>ម៉ូឌុល៖</strong> $r^n = (\sqrt{2})^6 = 8$</li>
-                            <li><strong>អាគុយម៉ង់៖</strong> $n\theta = 6 \times \frac{\pi}{12} = \frac{6\pi}{12} = \frac{\pi}{2}$</li>
-                            <li>គេបាន៖ $D = 8\left(\cos\frac{\pi}{2} + i\sin\frac{\pi}{2}\right)$</li>
-                            <li>ដោយ $\cos\frac{\pi}{2} = 0$ និង $\sin\frac{\pi}{2} = 1$</li>
-                            <li>ចម្លើយចុងក្រោយ៖ $D = 8(0 + i(1)) = $ <span class="highlight" style="color:red">$8i$</span></li>
-                        </ul>
+                        <div class="mini-stepper-bar" style="margin-bottom: 0.7rem;">
+                            <strong style="color: var(--primary);">ដំណោះស្រាយលំហាត់ទី ៥ ៖</strong>
+                            <div style="display: flex; gap: 0.4rem; align-items: center;">
+                                <button class="mini-step-btn" onclick="stepEx(5, -1)">&lt; មុន</button>
+                                <span id="exLabel5" style="font-size: 0.82rem; font-weight: bold;">ជំហាន 1 / 2</span>
+                                <button class="mini-step-btn" onclick="stepEx(5, 1)">បន្ទាប់ &gt;</button>
+                            </div>
+                        </div>
+                        <div id="ex5_1" class="sol-step-item"><strong>ជំហានទី១៖</strong> ម៉ូឌុល $r^n = (\sqrt{2})^6 = 8$ និងមុំ $n\theta = 6 \times \frac{\pi}{12} = \frac{\pi}{2}$</div>
+                        <div id="ex5_2" class="sol-step-item" style="border-left-color: var(--success); display:none;"><strong>ជំហានទី២៖</strong> $D = 8\left(\cos\frac{\pi}{2} + i\sin\frac{\pi}{2}\right) = 8(0 + i) =$ <span class="highlight" style="color:red">$8i$</span></div>
                     </div>
                 </div>
 
@@ -852,65 +1411,283 @@
         </div>
 
         <footer>
-            <div style="text-align: left;">
-                <span>ថ្នាក់ <strong>12NGS-B</strong></span>
+            <div>
+                <span>ថ្នាក់ <strong>12NGS-B</strong> • វិទ្យាល័យបឹងត្របែក សាលារៀនជំនាន់ថ្មី</span>
             </div>
             <div>
-                រៀបរៀងដោយ៖ <span class="credits-authors">សារ៉ែន សិរីបុញ្ញវឌ្ឍក៍</span> និង <span class="credits-authors">គ្រី រិទ្ធិរាជ្យ</span><br>
+                រៀបរៀងដោយ៖ <span class="credits-authors">សារ៉ែន សិរីបុញ្ញវឌ្ឍក៍</span> និង <span class="credits-authors">គ្រី រិទ្ធិរាជ្យ</span> | 
                 បង្រៀន និងយោងឯកសារដោយ៖ <span class="credits-teacher">លោកគ្រូ ផៃ ចន</span>
             </div>
         </footer>
     </div>
 
     <script>
-        // Function to switch tabs
-        function switchTab(tabId) {
-            // Remove active class from all sections and buttons
+        // ១. ប្តូរផ្ទាំងម៉ឺនុយ (Switch Tabs)
+        function switchTab(tabId, btnEl) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             
-            // Add active class to target section
             document.getElementById(tabId).classList.add('active');
+            if (btnEl) btnEl.classList.add('active');
             
-            // Add active class to clicked button
-            event.currentTarget.classList.add('active');
-            
-            // Re-render MathJax to ensure formulas appear correctly in newly visible tabs
-            // Added small delay to ensure DOM is updated before rendering
             setTimeout(() => {
                 if (window.MathJax) {
                     MathJax.typesetPromise();
                 }
-            }, 50);
+            }, 40);
         }
 
-        // Function to flip flashcards
+        // ២. មុខងារ Dark / Light Mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.getElementById('themeIcon');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+        }
+
+        // ៣. ប៊ូតុង < > សម្រាប់រំលឹកមេរៀនចាស់ (Home - Default ចាប់ផ្តើមពីជំហានទី 1)
+        let currentReviewStep = 1;
+        function stepReview(dir) {
+            currentReviewStep += dir;
+            if (currentReviewStep < 1) currentReviewStep = 1;
+            if (currentReviewStep > 3) currentReviewStep = 3;
+
+            for (let i = 1; i <= 3; i++) {
+                const el = document.getElementById('reviewStep' + i);
+                if (el) el.style.display = (i <= currentReviewStep) ? 'block' : 'none';
+            }
+            document.getElementById('reviewStepLabel').textContent = `ជំហាន ${currentReviewStep} / 3`;
+            document.getElementById('revPrevBtn').disabled = (currentReviewStep === 1);
+            document.getElementById('revNextBtn').disabled = (currentReviewStep === 3);
+        }
+
+        // ៤. ប៊ូតុង < > សម្រាប់តារាងរកឃើញទម្រង់ z^n (Theory - Default ចាប់ផ្តើមពីជំហានទី 1)
+        let currentDiscStep = 1;
+        function stepDiscovery(dir) {
+            currentDiscStep += dir;
+            if (currentDiscStep < 1) currentDiscStep = 1;
+            if (currentDiscStep > 4) currentDiscStep = 4;
+
+            for (let i = 1; i <= 3; i++) {
+                const row = document.getElementById('discRow' + i);
+                if (row) {
+                    row.style.display = (i <= currentDiscStep) ? 'table-row' : 'none';
+                    row.classList.toggle('active-row', i === currentDiscStep);
+                }
+            }
+            const conc = document.getElementById('discConclusion');
+            if (conc) conc.style.display = (currentDiscStep === 4) ? 'block' : 'none';
+            document.getElementById('discStepLabel').textContent = (currentDiscStep === 4) ? 'សន្និដ្ឋាន (4/4)' : `ជំហាន ${currentDiscStep} / 4`;
+            document.getElementById('discPrevBtn').disabled = (currentDiscStep === 1);
+            document.getElementById('discNextBtn').disabled = (currentDiscStep === 4);
+        }
+
+        // ៥. ប៊ូតុង < > សម្រាប់ការស្រាយបញ្ជាក់វិចារកំណើន (Theory - Default ចាប់ផ្តើមពីជំហានទី 1)
+        let currentProofStep = 1;
+        function stepProof(dir) {
+            currentProofStep += dir;
+            if (currentProofStep < 1) currentProofStep = 1;
+            if (currentProofStep > 3) currentProofStep = 3;
+
+            for (let i = 1; i <= 3; i++) {
+                const el = document.getElementById('proofStep' + i);
+                if (el) el.style.display = (i <= currentProofStep) ? 'block' : 'none';
+            }
+            document.getElementById('proofStepLabel').textContent = `ជំហាន ${currentProofStep} / 3`;
+            document.getElementById('proofPrevBtn').disabled = (currentProofStep === 1);
+            document.getElementById('proofNextBtn').disabled = (currentProofStep === 3);
+        }
+
+        // ៦. ក្រាបធរណីមាត្រ GeoGebra អន្តរកម្ម (Default ចាប់ផ្តើមពីជំហានទី 1 : z^1)
+        let geoCurrentK = 1;
+        let geoInterval = null;
+        const geoAngles = ['', '30° (π/6)', '60° (2π/6)', '90° (3π/6)', '120° (4π/6)', '150° (5π/6)', '180° (6π/6)'];
+
+        function updateGeoDisplay() {
+            for (let k = 1; k <= 6; k++) {
+                const vec = document.getElementById('geoVec' + k);
+                if (!vec) continue;
+                if (geoCurrentK === 0) {
+                    vec.classList.remove('dimmed', 'highlighted');
+                } else {
+                    vec.classList.toggle('dimmed', k > geoCurrentK);
+                    vec.classList.toggle('highlighted', k === geoCurrentK);
+                }
+            }
+            const statusEl = document.getElementById('geoStatusText');
+            if (geoCurrentK === 0) {
+                statusEl.textContent = 'បង្ហាញទាំងអស់ (z¹ - z⁶)';
+            } else {
+                statusEl.textContent = `ជំហាន ${geoCurrentK}/6 : z^${geoCurrentK} (${geoAngles[geoCurrentK]})`;
+            }
+        }
+
+        function stepGeoGebra(dir) {
+            if (geoCurrentK === 0) {
+                geoCurrentK = 1;
+            } else {
+                geoCurrentK += dir;
+                if (geoCurrentK > 6) geoCurrentK = 1;
+                if (geoCurrentK < 1) geoCurrentK = 6;
+            }
+            updateGeoDisplay();
+        }
+
+        function showAllGeoGebra() {
+            if (geoInterval) toggleGeoPlay();
+            geoCurrentK = 0;
+            updateGeoDisplay();
+        }
+
+        function toggleGeoPlay() {
+            const btn = document.getElementById('geoPlayBtn');
+            if (geoInterval) {
+                clearInterval(geoInterval);
+                geoInterval = null;
+                btn.innerHTML = '<i class="fas fa-play"></i> វិលស្វ័យប្រវត្តិ';
+                btn.classList.remove('active');
+            } else {
+                if (geoCurrentK === 0 || geoCurrentK === 6) geoCurrentK = 1;
+                updateGeoDisplay();
+                btn.innerHTML = '<i class="fas fa-pause"></i> ឈប់';
+                btn.classList.add('active');
+                geoInterval = setInterval(() => {
+                    stepGeoGebra(1);
+                }, 1100);
+            }
+        }
+
+        // ៧. ប៊ូតុង < > សម្រាប់ជំហានគណនា (Steps Tab - Default ចាប់ផ្តើមពីជំហានទី 1)
+        let currentCalcStep = 1;
+        function highlightCalcStep(dir) {
+            currentCalcStep += dir;
+            if (currentCalcStep < 1) currentCalcStep = 1;
+            if (currentCalcStep > 3) currentCalcStep = 3;
+
+            for (let i = 1; i <= 3; i++) {
+                const card = document.getElementById('calcCard' + i);
+                if (card) {
+                    card.style.display = (i <= currentCalcStep) ? 'flex' : 'none';
+                    card.classList.toggle('step-focused', i === currentCalcStep);
+                }
+            }
+            document.getElementById('calcStepBadge').textContent = `ជំហានទី ${currentCalcStep} / 3`;
+            document.getElementById('calcPrevBtn').disabled = (currentCalcStep === 1);
+            document.getElementById('calcNextBtn').disabled = (currentCalcStep === 3);
+        }
+
+        // ៨. ត្រឡប់កាត Flashcards
         function toggleCard(cardElement) {
             cardElement.classList.toggle('is-flipped');
         }
 
-        // Function to toggle solution visibility in practice section
-        function toggleSolution(solId) {
+        // ៩. បង្ហាញ/លាក់ចម្លើយលំហាត់អនុវត្តន៍ និងប៊ូតុង < > តាមលំហាត់នីមួយៗ (Default ជំហានទី 1)
+        const exStepState = { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 };
+        const exMaxSteps = { 1: 3, 2: 3, 3: 2, 4: 2, 5: 2 };
+
+        function stepEx(exNum, dir) {
+            const max = exMaxSteps[exNum];
+            exStepState[exNum] += dir;
+            if (exStepState[exNum] < 1) exStepState[exNum] = 1;
+            if (exStepState[exNum] > max) exStepState[exNum] = max;
+
+            const current = exStepState[exNum];
+            for (let i = 1; i <= max; i++) {
+                const stepEl = document.getElementById(`ex${exNum}_${i}`);
+                if (stepEl) stepEl.style.display = (i <= current) ? 'block' : 'none';
+            }
+            const labelEl = document.getElementById(`exLabel${exNum}`);
+            if (labelEl) labelEl.textContent = `ជំហាន ${current} / ${max}`;
+        }
+
+        function toggleSolution(solId, btn) {
             const solBox = document.getElementById(solId);
-            const btn = event.currentTarget;
-            
+            const exNum = parseInt(solId.replace('sol', ''), 10);
             if (solBox.style.display === "block") {
                 solBox.style.display = "none";
                 btn.innerHTML = '<i class="fas fa-eye"></i> បង្ហាញចម្លើយ';
-                btn.style.backgroundColor = "";
+                btn.style.background = "";
                 btn.style.color = "";
             } else {
+                exStepState[exNum] = 1;
+                stepEx(exNum, 0);
                 solBox.style.display = "block";
                 btn.innerHTML = '<i class="fas fa-eye-slash"></i> លាក់ចម្លើយ';
-                btn.style.backgroundColor = "var(--primary)";
+                btn.style.background = "linear-gradient(135deg, var(--primary), var(--secondary))";
                 btn.style.color = "white";
-                
-                // Ensure MathJax renders if solution was hidden during initial page load
                 if (window.MathJax) {
                     MathJax.typesetPromise([solBox]);
                 }
             }
         }
+
+        // ១០. Interactive Mathematical Constellation & Floating Symbols Background
+        function initMathBackground() {
+            const canvas = document.getElementById('mathBgCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            const symbols = ['zⁿ', 'cos θ', 'i sin θ', 'π', 'rⁿ', 'θ', '√2', 'i² = -1', 'De Moivre', 'Re', 'Im'];
+            const particles = Array.from({ length: 28 }, (_, i) => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.45,
+                vy: (Math.random() - 0.5) * 0.45,
+                symbol: symbols[i % symbols.length],
+                size: 12 + Math.random() * 6
+            }));
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+                const isDark = document.body.classList.contains('dark-mode');
+                ctx.fillStyle = isDark ? 'rgba(0, 242, 254, 0.22)' : 'rgba(79, 70, 229, 0.18)';
+                ctx.strokeStyle = isDark ? 'rgba(0, 242, 254, 0.08)' : 'rgba(79, 70, 229, 0.07)';
+
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                    ctx.font = `bold ${p.size}px 'Poppins', serif`;
+                    ctx.fillText(p.symbol, p.x, p.y);
+
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                        if (dist < 150) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // Initialize all steppers to Step 1 on load
+        window.addEventListener('DOMContentLoaded', () => {
+            stepReview(0);
+            stepDiscovery(0);
+            stepProof(0);
+            updateGeoDisplay();
+            highlightCalcStep(0);
+            initMathBackground();
+        });
     </script>
 </body>
 </html>
